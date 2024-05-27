@@ -1,4 +1,4 @@
-PennController.ResetPrefix(null)
+ PennController.ResetPrefix(null)
 
 // Generates random number assigned to participants 
 var randomCode = Math.random().toString(36).substr(2,9)
@@ -84,7 +84,7 @@ Template("dummy_materials_160524_practice.csv", row =>
                 .print(),
             newText("key-info", "Press F for FALSE and J for TRUE")
                 .print(),
-            newKey("keypress-question", "F, J")
+            newKey("keypress-question", "F,J")
                 .log()
                 .wait(),
             getKey("keypress-question")
@@ -117,40 +117,40 @@ newTrial("Intro-3"
 
 // Experimental trials
 
-Template("dummy_materials_160524.csv", row =>
+Template("dummy_materials_270524.csv", row =>
     newTrial("Experiment",
         defaultText
-        .center()
-        .print("center at 50vw","middle at 50vh"),
+            .center()
+            .print("center at 50vw", "middle at 50vh"),
         
-        // Self paced reading
-        
-        newController("DashedSentence", {s :`${row.Sentence}`, display: "in place", hideUnderscores: true, })
-            .css("white-space","nowrap")
+        // Self-paced reading
+        newController("DashedSentence", {s: `${row.Sentence}`, display: "in place", hideUnderscores: true})
+            .css("white-space", "nowrap")
             .center()
             .print()
             .log()
             .wait(),
         
-        // Comprehension question
-        
-        newFunction("checkQuestion", function(){ // Function to check if the trial has a question
-            if (row.Question === "Yes") {
-                newText(`<p>${row.QuestionSentence}</p>`) // Display the question text
-                    .css(`font-size`, `1.4em`)
-                    .print();
-                newText("key-info", "Press F for FALSE and J for TRUE")
-                    .print();
-                newKey("keypress-question", "F, J") 
-                    .log()
-                    .wait();
-            }
-        }).call()
-        .log("hasQuestion", row.Question === "Yes") // Log whether the trial has a question
+        // Conditionally display comprehension question
+        ...(row.Question === "Yes" ? [
+            newText(`<p>${row.QuestionSentence}</p>`)
+                .css("font-size", "1.4em")
+                .print(),
+            newText("key-info", "Press F for FALSE and J for TRUE")
+                .print(),
+            newKey("keypress-question", "F,J")
+                .log()
+                .wait(),
+            getKey("keypress-question")
+                .test.pressed(row.CorrectResponse)
+                .success(newText("success", "Correct!").print())
+                .failure(newText("failure", "Incorrect – press F for FALSE and J for TRUE").print())
+        ] : [])
     )
     .log("Figure", row.Figure)
     .log("Context", row.Context)
     .log("Group", row.Group)
     .log("Condition", row.Condition)
     .log("CorrectResponse", row.CorrectResponse)
+    .log("hasQuestion", row.Question === "Yes")
 );
