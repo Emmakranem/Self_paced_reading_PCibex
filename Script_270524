@@ -67,28 +67,35 @@ newTrial("Intro-1",
 )
 
 // Practice trials
+
 Template("dummy_materials_160524_practice.csv", row =>
     newTrial("Practice",
         defaultText.center().print("center at 50vw","middle at 50vh"),
-        newController("DashedSentence", {s :`${row.Practice}`, display: "in place", hideUnderscores: true})
+        newController("DashedSentence", {s: `${row.Practice}`, display: "in place", hideUnderscores: true})
             .css("white-space","nowrap")
             .center()
             .print()
             .log()
             .wait(),
-        newText(`<p>${row.QuestionSentence}</p>`)
-            .css(`font-size`, `1.4em`)
-            .print(),
-        newText("key-info", "Press F for FALSE and J for TRUE")
-            .print(),
-        newKey("keypress-question", "F, J") 
-            .log()
-            .wait(),
-        getKey("keypress-question")
-            .test.pressed(row.CorrectResponse)
-            .success(newText("success", "Correct!").print())
-            .failure(newText("failure", "Incorrect – press F for FALSE and J for TRUE").print())
+        // Conditionally display comprehension question
+        (row.Question === "Yes" ? [
+            newText(`<p>${row.QuestionSentence}</p>`)
+                .css(`font-size`, `1.4em`)
+                .print(),
+            newText("key-info", "Press F for FALSE and J for TRUE")
+                .print(),
+            newKey("keypress-question", "F, J")
+                .log()
+                .wait(),
+            getKey("keypress-question")
+                .test.pressed(row.CorrectResponse)
+                .success(newText("success", "Correct!").print())
+                .failure(newText("failure", "Incorrect – press F for FALSE and J for TRUE").print())
+        ] : [])
     )
+    .log("Figure", row.Figure)
+    .log("Context", row.Context)
+    .log("Group", row.Group)
 );
 
 // Transition from practice to experiment 
