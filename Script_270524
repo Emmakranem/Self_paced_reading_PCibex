@@ -84,13 +84,9 @@ Template("dummy_materials_160524_practice.csv", row =>
                 .print(),
             newText("key-info", "Press F for FALSE and J for TRUE")
                 .print(),
-            newKey("keypress-question", "F,J")
+            newKey("keypress-question", "FJ")
                 .log()
-                .wait(),
-            getKey("keypress-question")
-                .test.pressed(row.CorrectResponse)
-                .success(newText("success", "Correct!").print())
-                .failure(newText("failure", "Incorrect – press F for FALSE and J for TRUE").print())
+                .wait()
         ] : [])
     )
     .log("Figure", row.Figure)
@@ -150,3 +146,5 @@ Template("dummy_materials_270524.csv", row =>
     .log("CorrectResponse", row.CorrectResponse)
     .log("hasQuestion", row.Question === "Yes")
 );
+
+
