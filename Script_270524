@@ -1,4 +1,4 @@
- PennController.ResetPrefix(null)
+PennController.ResetPrefix(null)
 
 // Generates random number assigned to participants 
 var randomCode = Math.random().toString(36).substr(2,9)
@@ -70,13 +70,23 @@ newTrial("Intro-1",
 
 Template("dummy_materials_160524_practice.csv", row =>
     newTrial("Practice",
-        defaultText.center().print("center at 50vw","middle at 50vh"),
+        defaultText.center().print("center at 50vw","middle at 50vh")
+        ,
+        // Automatically start and wait for Timer elements when created
+        defaultTimer.start().wait()
+        ,
+        // Mask, shown on screen for 500ms
+        newText("mask","+++").center().print("center at 50vw","middle at 50vh"),
+        newTimer("maskTimer", 1000),                       
+        getText("mask").remove()
+        ,
         newController("DashedSentence", {s: `${row.Practice}`, display: "in place", hideUnderscores: true})
             .css("white-space","nowrap")
             .center()
             .print()
             .log()
-            .wait(),
+            .wait()
+        ,
         // Conditionally display comprehension question
         (row.Question === "Yes" ? [
             newText(`<p>${row.QuestionSentence}</p>`)
@@ -115,10 +125,16 @@ newTrial("Intro-3"
 
 Template("dummy_materials_270524.csv", row =>
     newTrial("Experiment",
-        defaultText
-            .center()
-            .print("center at 50vw", "middle at 50vh"),
-        
+        defaultText.center().print("center at 50vw", "middle at 50vh")
+        ,
+        // Automatically start and wait for Timer elements when created
+        defaultTimer.start().wait()
+        ,
+        // Mask, shown on screen for 500ms
+        newText("mask","+++").center().print("center at 50vw","middle at 50vh"),
+        newTimer("maskTimer", 1000),                       
+        getText("mask").remove()
+        ,
         // Self-paced reading
         newController("DashedSentence", {s: `${row.Sentence}`, display: "in place", hideUnderscores: true})
             .css("white-space", "nowrap")
@@ -146,5 +162,4 @@ Template("dummy_materials_270524.csv", row =>
     .log("CorrectResponse", row.CorrectResponse)
     .log("hasQuestion", row.Question === "Yes")
 );
-
 
