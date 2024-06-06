@@ -68,7 +68,7 @@ newTrial("Intro-1",
 
 // Practice trials
 
-Template("dummy_materials_160524_practice.csv", row =>
+Template("dummy_materials_060624_practice.csv", row =>
     newTrial("Practice",
         defaultText.center().print("center at 50vw","middle at 50vh")
         ,
@@ -80,7 +80,14 @@ Template("dummy_materials_160524_practice.csv", row =>
         newTimer("maskTimer", 1000),                       
         getText("mask").remove()
         ,
-        newController("DashedSentence", {s: `${row.Practice}`, display: "in place", hideUnderscores: true})
+        newController("DashedSentence", {s: `${row.PracticeContext}`, display: "dashed", hideUnderscores: true, showAhead: false})
+            .css("white-space","nowrap")
+            .center()
+            .print()
+            .log()
+            .wait()
+        ,
+        newController("DashedSentence", {s: `${row.PracticeTarget}`, display: "dashed", hideUnderscores: true, showAhead: false})
             .css("white-space","nowrap")
             .center()
             .print()
@@ -91,12 +98,19 @@ Template("dummy_materials_160524_practice.csv", row =>
         (row.Question === "Yes" ? [
             newText(`<p>${row.QuestionSentence}</p>`)
                 .css(`font-size`, `1.4em`)
-                .print(),
-            newText("key-info", "Press F for FALSE and J for TRUE")
-                .print(),
-            newKey("keypress-question", "FJ")
-                .log()
-                .wait()
+                .print()
+            ,
+            newText("key-info", "Press F for FALSE or J for TRUE")
+                .print()
+            ,
+            newKey("keypress-question", "F,J").log().wait(" ").log()
+            ,
+            getKey("keypress-question")
+            .test.pressed(row.CorrectResponse)
+            .success(newText('correct','Right answer!').italic().center().print())
+            .failure(newText('false','Wrong answer!').color("red").center().print())
+            ,
+            newTimer('wait', 1500).start().wait()
         ] : [])
     )
     .log("Figure", row.Figure)
@@ -123,7 +137,7 @@ newTrial("Intro-3"
 
 // Experimental trials
 
-Template("dummy_materials_270524.csv", row =>
+Template("dummy_materials_060624.csv", row =>
     newTrial("Experiment",
         defaultText.center().print("center at 50vw", "middle at 50vh")
         ,
@@ -131,26 +145,36 @@ Template("dummy_materials_270524.csv", row =>
         defaultTimer.start().wait()
         ,
         // Mask, shown on screen for 500ms
-        newText("mask","+++").center().print("center at 50vw","middle at 50vh"),
-        newTimer("maskTimer", 1000),                       
+        newText("mask","+++").center().print("center at 50vw","middle at 50vh")
+        ,
+        newTimer("maskTimer", 1000)
+        ,                       
         getText("mask").remove()
         ,
         // Self-paced reading
-        newController("DashedSentence", {s: `${row.Sentence}`, display: "in place", hideUnderscores: true})
+        newController("DashedSentence", {s: `${row.SentenceContext}`, display: "dashed", hideUnderscores: true, showAhead: false})
             .css("white-space", "nowrap")
             .center()
             .print()
             .log()
-            .wait(),
+            .wait()
+        ,
+        newController("DashedSentence", {s: `${row.SentenceTarget}`, display: "dashed", hideUnderscores: true, showAhead: false})
+            .css("white-space", "nowrap")
+            .center()
+            .print()
+            .log()
+            .wait()
+        ,
         
         // Conditionally display comprehension question
         ...(row.Question === "Yes" ? [
             newText(`<p>${row.QuestionSentence}</p>`)
                 .css("font-size", "1.4em")
                 .print(),
-            newText("key-info", "Press F for FALSE and J for TRUE")
+            newText("key-info", "Press F for FALSE or J for TRUE")
                 .print(),
-            newKey("keypress-question", "F,J")
+            newKey("keypress-question", "FJ")
                 .log()
                 .wait()
         ] : [])
