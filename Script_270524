@@ -68,7 +68,7 @@ newTrial("Intro-1",
 
 // Practice trials
 
-Template("dummy_materials_060624_practice.csv", row =>
+Template("dummy_materials_160524_practice.csv", row =>
     newTrial("Practice",
         defaultText.center().print("center at 50vw","middle at 50vh")
         ,
@@ -80,14 +80,7 @@ Template("dummy_materials_060624_practice.csv", row =>
         newTimer("maskTimer", 1000),                       
         getText("mask").remove()
         ,
-        newController("DashedSentence", {s: `${row.PracticeContext}`, display: "dashed", hideUnderscores: true, showAhead: false})
-            .css("white-space","nowrap")
-            .center()
-            .print()
-            .log()
-            .wait()
-        ,
-        newController("DashedSentence", {s: `${row.PracticeTarget}`, display: "dashed", hideUnderscores: true, showAhead: false})
+        newController("DashedSentence", {s: `${row.Practice}`, display: "in place", hideUnderscores: true})
             .css("white-space","nowrap")
             .center()
             .print()
@@ -95,7 +88,7 @@ Template("dummy_materials_060624_practice.csv", row =>
             .wait()
         ,
         // Conditionally display comprehension question
-        (row.Question === "Yes" ? [
+               (row.Question === "Yes" ? [
             newText(`<p>${row.QuestionSentence}</p>`)
                 .css(`font-size`, `1.4em`)
                 .print()
@@ -137,9 +130,9 @@ newTrial("Intro-3"
 
 // Experimental trials
 
-Template("dummy_materials_060624.csv", row =>
+Template("dummy_materials_100624.csv", row =>
     newTrial("Experiment",
-        defaultText.center().print("center at 50vw", "middle at 50vh")
+        defaultText.left().print()
         ,
         // Automatically start and wait for Timer elements when created
         defaultTimer.start().wait()
@@ -152,27 +145,19 @@ Template("dummy_materials_060624.csv", row =>
         getText("mask").remove()
         ,
         // Self-paced reading
-        newController("DashedSentence", {s: `${row.SentenceContext}`, display: "dashed", hideUnderscores: true, showAhead: false})
+        newController("DashedSentence", {s: `${row.Sentence}`, display: "in place", hideUnderscores: true})
             .css("white-space", "nowrap")
-            .center()
+            .left()
             .print()
             .log()
-            .wait()
-        ,
-        newController("DashedSentence", {s: `${row.SentenceTarget}`, display: "dashed", hideUnderscores: true, showAhead: false})
-            .css("white-space", "nowrap")
-            .center()
-            .print()
-            .log()
-            .wait()
-        ,
+            .wait(),
         
         // Conditionally display comprehension question
         ...(row.Question === "Yes" ? [
             newText(`<p>${row.QuestionSentence}</p>`)
                 .css("font-size", "1.4em")
                 .print(),
-            newText("key-info", "Press F for FALSE or J for TRUE")
+            newText("key-info", "Press F for FALSE and J for TRUE")
                 .print(),
             newKey("keypress-question", "FJ")
                 .log()
