@@ -3,8 +3,7 @@ PennController.ResetPrefix(null)
 // Generates random number assigned to participants 
 var randomCode = Math.random().toString(36).substr(2,9)
 // A message to show to participants at completion (useful for confirmation, raffle entry, etc.)
-var completionMessage = "Thank you for your participation. You may close the window now. Your participation code is: " +
-randomCode
+var completionMessage = "Thank you for your participation. You may close the window now."
 
 // Assign ID
 Header(
@@ -13,10 +12,14 @@ Header(
 .log( "id" , getVar("ID")) // Add the ID to all trials' results lines
 
 // Set the order of the elements of experiment and randomize experimental items
-Sequence("Consent",
-        "Intro-1",        
+Sequence("Intro-1",
+        "Consent",
+        "Intro-2",
+        "Intro-3",
+        "Intro-4",
         "Practice",
-        "Intro-3", 
+        "Intro-5",
+        "Intro-6",
         randomize("Experiment"))
 
 
@@ -24,18 +27,14 @@ Sequence("Consent",
 newTrial("Consent",
     defaultText.center().print()
     ,
-     newText("Consent1", "<p> In order to continue, please provide your consent to participate in this experiment.</p>")
+     newText("Consent1", "<p>Pour continuer, veuillez consentir à participer à cette expérience.</p>")
         .css("font-size","1.8em")
         .bold()
     ,
-     newText("Consent2","See the document in the link below if you would like to review the information sheet.")
-         .css("margin","1.8em")
-         .print()
-    ,
-    newText("Consent3", "<p> Click link to open <a href=https://drive.google.com/file/d/14ppqLElOxPqZlerkn1uSvIAMR9OqX5Wy/view?usp=sharing target='_blank'>the consent form in a new tab<a/>.</p>")
+    newText("Consent2", "<p>Cliquez ici <a href=https://drive.google.com/file/d/14ppqLElOxPqZlerkn1uSvIAMR9OqX5Wy/view?usp=sharing target='_blank'> pour consulter la fiche d'information<a/>.</p>") // remember to add the link here, emma
         .print()
     ,
-     newButton("consent button", "I consent")
+     newButton("consent button", "Cliquez ici pour donner votre consentement.")
         .center()
         .css("font-size","1.8em")
         .print()
@@ -48,102 +47,240 @@ newTrial("Intro-1",
         .center()
         .print()
     ,
-    newText("instructions-1", "Welcome!")
+    newText("instructions-1", "Bonjour ! Bienvenue à notre Expérience d’Histoires Courtes !")
     ,
-    newText("instructions-2", "<p>In this experiment, you are going to read some stories and verify statements about them. After reading the part of the story that you see on the screen, you must hit the spacebar to see the next part.</p>")
+    newText("instructions-2", "<p>Dans cette expérience, votre tâche consistera à lire des histoires courtes et à répondre par vrai ou faux à des affirmations sur ces histoires.</p>")
     ,
-    newText("instructions-3", "<b>Please read at a normal pace and make sure you understand the text. Hit the spacebar to continue. Keep your thumbs at the spacebar, your left index finger on the F key, and your right index finger on the J key (as shown on image below).</b>")
+    newText("instructions-3", "<b>Vous êtes prêt.e à commencer ?</b>")
     ,
-    newText("instructions-4", "<p>First, you will do two practice trials.</p>")
+    newText("instructions-4", "<p>Veuillez saisir votre identifiant Prolific ci-dessous.</p>")
+    ,
+    newTextInput("inputID", "")
+        .center()
+        .css("margin","1em")
+        .log()
+        .print()
+    ,
+    newText("warning", "Veuillez d'abord entrer votre identifiant")
+        .color("red")
+        .bold()
+        .remove()
+    ,
+    newButton("wait", "Cliquez ici pour commencer")
+        .center()
+        .print()
+        // Only validate a click on Start when inputID has been filled
+        .wait(  // Make sure the TextInput has been filled
+            getTextInput("inputID")
+                .testNot.text("")
+                .failure( getText("warning").print() )
+        )
+
+)
+
+newTrial("Intro-2",
+    defaultText
+        .center()
+        .print()
+    ,
+    newText("instructions-5", "<b>Dans cette expérience, chaque histoire est composée de trois phrases.</b>")
+    ,
+    newText("instructions-6", "<p>Les histoires parlent de différents personnages et de ce qu'ils font ou de ce qui leur arrive.</p>")
+    ,
+    newText("instructions-7", "<p>Nous aimerions que vous lisiez chaque phrase de manière naturelle.</p>")
+    ,
+    newText("instructions-8", "<p>Appuyez sur la barre d'espace pour afficher la suite des consignes.</p>")
+    ,
+    newKey(" ")
+        // .log()
+        .wait()
+        // .log()
+)
+
+newTrial("Intro-3",
+    defaultText
+        .center()
+        .print()
+    ,
+    newText("instructions-9", "<p>Vous devrez appuyer sur la barre d'espace pour avancer dans l'histoire. </p>")
+    ,
+    newText("instructions-10", "<b>Des segments de phrases s’afficheront à l'écran et le segment suivant apparaîtra lorsque vous appuierez sur la barre d'espace. </b>")
+    ,
+    newText("instructions-11", "<p>Occasionnellement, vous devrez répondre à une affirmation vraie ou fausse concernant les histoires après les avoir lues. Pour les affirmations, vous devrez appuyer sur F pour dire FAUX et sur J pour dire VRAI.</p>")
+    ,
+    newText("instructions-12", "<p>Placez votre index gauche sur la touche F, votre index droit sur la touche J et votre pouce sur la barre d'espace.</p>")
+    ,
+    newText("instructions-13", "<b>Il est important que vos doigts restent positionnés de cette manière pendant toute la durée de l’expérience.<b/>")
+    ,
+    newText("instructions-14", "<p>Appuyez sur la barre d'espace pour afficher la suite des consignes.<p/>")
     ,
     newImage("finger-position", "fingers.png")
         .center()
         .print()
     ,
-    newButton("wait", "Click to start the practice trials")
-        .center()
-        .print()
+    newKey(" ")
+        // .log()
         .wait()
+        // .log()
 )
 
+newTrial("Intro-4",
+    defaultText
+        .center()
+        .print()
+    ,
+    newText("instructions-15", "<p>Entre chaque histoire, vous aurez droit à une courte pause.</p>")
+    ,
+    newText("instructions-16", "<p>Pendant cette pause, vous verrez apparaître le message suivant:</p>")
+    ,
+    newText("instructions-17", "<p>« Quand ce message aura disparu, appuyez sur la barre d'espace pour commencer à lire l'histoire suivante. »</p>")
+        .color("blue")
+    ,
+    newText("instructions-18", "<p>Après chaque pause, appuyez sur la barre d'espace pour avancer dans l'histoire, comme vous l'avez fait précédemment.</p>")
+    ,
+    newText("instructions-19", "<p>Appuyez sur la barre d'espace pour accéder à les sessions d’entrainement.<p/>")
+    ,
+    newKey(" ")
+        // .log()
+        .wait()
+        // .log()
+)
+    
 // Practice trials
-Template("dummy_materials_160524_practice.csv", row =>
+Template("practice_french_metsim_040724.csv", row =>
     newTrial("Practice",
-        defaultText.center().print("center at 50vw","middle at 50vh"),
-        newController("DashedSentence", {s :`${row.Practice}`, display: "in place", hideUnderscores: true})
+        defaultText.left().print()
+        ,
+        // Automatically start and wait for Timer elements when created
+        defaultTimer.start().wait()
+        ,
+        // Break, shown on screen for 1500ms
+        newText("break","<i>(Quand ce message aura disparu, appuyez sur la barre d'espace pour commencer à lire l'histoire suivante.)<i/>").left().print()
+        ,
+        newTimer("breakTimer", 1500)
+        ,                       
+        getText("break").remove()
+        ,
+        // Mask, show for 500ms
+        newText("mask", "<p>XXX<p/>").left().print()
+        ,
+        newTimer("maskTimer", 500)
+        ,
+        getText("mask").remove()
+        ,
+        newController("DashedSentence", {s: `${row.Sentence}`, display: "dashed", hideUnderscores: true, showAhead: false, showBehind: false})
             .css("white-space","nowrap")
-            .center()
+            .left()
             .print()
             .log()
-            .wait(),
-        newText(`<p>${row.QuestionSentence}</p>`)
-            .css(`font-size`, `1.4em`)
-            .print(),
-        newText("key-info", "Press F for FALSE and J for TRUE")
-            .print(),
-        newKey("keypress-question", "F, J") 
-            .log()
-            .wait(),
-        getKey("keypress-question")
+            .wait()
+        ,
+        // Conditionally display comprehension question
+               (row.Question === "Yes" ? [
+            newText(`<p>${row.QuestionSentence}</p>`)
+                .center()
+                .css(`font-size`, `1.4em`)
+                .print()
+            ,
+            newText("key-info", "Appuyez sur F pour FAUX ou J pour VRAI")
+                .center()
+                .print()
+            ,
+            newKey("keypress-question", "F,J").log().wait(" ").log()
+            ,
+            getKey("keypress-question")
             .test.pressed(row.CorrectResponse)
-            .success(newText("success", "Correct!").print())
-            .failure(newText("failure", "Incorrect – press F for FALSE and J for TRUE").print())
+            .success(newText('correct','Bravo !').color("green").italic().center().print())
+            .failure(newText('false','Mauvaise réponse !').color("red").center().print())
+            ,
+            newTimer('wait', 1500).start().wait()
+        ] : [])
     )
+    .log("Figure", row.Figure)
+    .log("Context", row.Context)
+    .log("Group", row.Group)
 );
 
 // Transition from practice to experiment 
-newTrial("Intro-3"
+newTrial("Intro-5"
     ,
     defaultText
         .center()
         .print()
     ,
-    newText("Instructions-4", "<p>Great! Now that you know how it works, the experiment can begin. Click the button to start the experiment.</p>")
+    newText("Instructions-20", "<p>Bravo ! Vous avez terminé les sessions d’entrainement.</p>")
+    ,
+    newText("Instructions-21", "<p>Gardez en tête que dans cette expérience, il n’y aura pas toujours une question de compréhension.</p>")
+    ,
+    newText("Instructions-22", "<p>Autrement dit, vous passerez parfois directement à l'histoire suivante.</p>")
+    ,
+    newText("Instructions-23", "<p>Appuyez sur la barre d'espace pour afficher la suite des consignes.<p/>")
+    ,
+    newKey(" ")
+        // .log()
+        .wait()
+        // .log()
+)
+
+newTrial("Intro-6"
+    ,
+    defaultText
         .center()
         .print()
     ,
-    newButton("Start experiment!")
-        .center()
-        .print()
+    newText("Instructions-24", "<p>Maintenant que vous êtes à l'aise avec le principe, vous pouvez commencer l'expérience.</p>")
+    ,
+    newText("Instructions-25", "<b>Appuyez sur la barre d'espace quand vous êtes prêt.e à commencer.</b>")
+    ,
+    newKey(" ")
+        // .log()
         .wait()
-    )
+        // .log()
+)
 
 // Experimental trials
 
-Template("dummy_materials_160524.csv", row =>
+Template("masterlist_french_metsim_040724.csv", row =>
     newTrial("Experiment",
-        defaultText
-        .center()
-        .print("center at 50vw","middle at 50vh"),
-        
-        // Self paced reading
-        
-        newController("DashedSentence", {s :`${row.Sentence}`, display: "in place", hideUnderscores: true, })
-            .css("white-space","nowrap")
-            .center()
+        defaultText.left().print()
+        ,
+        // Automatically start and wait for Timer elements when created
+        defaultTimer.start().wait()
+        ,
+        // Break, shown on screen for 1500ms
+        newText("break","<i>(Quand ce message aura disparu, appuyez sur la barre d'espace pour commencer à lire l'histoire suivante.)<i/>").left().print()
+        ,
+        newTimer("breakTimer", 1500)
+        ,                       
+        getText("break").remove()
+        ,
+        // Self-paced reading
+        newController("DashedSentence", {s: `${row.Sentence}`, display: "dashed", hideUnderscores: true, showAhead: false, showBehind: false})
+            .css("white-space", "nowrap")
+            .left()
             .print()
             .log()
             .wait(),
         
-        // Comprehension question
-        
-        newFunction("checkQuestion", function(){ // Function to check if the trial has a question
-            if (row.Question === "Yes") {
-                newText(`<p>${row.QuestionSentence}</p>`) // Display the question text
-                    .css(`font-size`, `1.4em`)
-                    .print();
-                newText("key-info", "Press F for FALSE and J for TRUE")
-                    .print();
-                newKey("keypress-question", "F, J") 
-                    .log()
-                    .wait();
-            }
-        }).call()
-        .log("hasQuestion", row.Question === "Yes") // Log whether the trial has a question
+        // Conditionally display comprehension question
+        ...(row.Question === "Yes" ? [
+            newText(`<p>${row.QuestionSentence}</p>`)
+                .center()
+                .css("font-size", "1.4em")
+                .print(),
+            newText("key-info", "Appuyez sur F pour FAUX ou J pour VRAI")
+                .center()
+                .print(),
+            newKey("keypress-question", "FJ")
+                .log()
+                .wait()
+        ] : [])
     )
     .log("Figure", row.Figure)
     .log("Context", row.Context)
     .log("Group", row.Group)
     .log("Condition", row.Condition)
     .log("CorrectResponse", row.CorrectResponse)
+    .log("hasQuestion", row.Question === "Yes")
 );
+
